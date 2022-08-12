@@ -26,9 +26,6 @@ jobs:
           docker build . -t ghcr.io/budgetbuddyde/subscription-service:${{ github.ref_name }}
           mkdir -p artifacts
           docker save ghcr.io/budgetbuddyde/subscription-service:${{ github.ref_name }} > artifacts/docker-image.tar
-        env:
-          DOCKER_BUILDKIT: 1
-          NPM_TOKEN: ${{ secrets.PAT }}
 
       - name: Save Docker image
         uses: actions/upload-artifact@v2
@@ -41,6 +38,7 @@ jobs:
     needs: build_image
     name: Push Docker image
     runs-on: ubuntu-latest
+    environment: production
     steps:
       - name: Retrieve saved Docker image
         uses: actions/download-artifact@v2
