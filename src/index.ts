@@ -59,7 +59,6 @@ const task = new CronJob('0 1 * * *', async () => {
   }
 });
 
-task.fireOnTick();
 task.start();
 
 function authClient(email: string, password: string): Promise<User | null> {
