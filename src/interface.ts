@@ -2,6 +2,7 @@ export type uuid = string;
 
 export interface ISubscription {
   id: number;
+  paused: boolean;
   category: number;
   paymentMethod: number;
   receiver: string;

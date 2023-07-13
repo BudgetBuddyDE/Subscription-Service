@@ -77,6 +77,7 @@ function getSubscriptions(): Promise<ISubscription[] | null> {
     const { data, error } = await supabase
       .from<ISubscription>('subscriptions')
       .select('*')
+      .eq('paused', false)
       .eq('execute_at', new Date().getDate());
     if (error) rej(error);
     res(data);
