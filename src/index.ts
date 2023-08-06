@@ -27,28 +27,34 @@ if (MISSING_ENVIRONMENT_VARIABLES.length >= 1) {
 }
 
 import { CronJob } from 'cron';
-import { supabase } from './supabase';
-import type { ISubscription, ITransaction } from './interface';
 import { User } from '@supabase/supabase-js';
+import { supabase } from './supabase';
+import type { TBaseSubscription, TBaseTransaction } from './types';
 
 const task = new CronJob('0 1 * * *', async () => {
   try {
-    await authClient(process.env.SERVICE_EMAIL!, process.env.SERVICE_PASSWORD!);
+    const authUser = await authClient(process.env.SERVICE_EMAIL!, process.env.SERVICE_PASSWORD!);
+    if (!authUser) {
+      throw new Error(`Authentification for ${process.env.SERVICE_EMAIL} failed`);
+    }
 
     const subscriptions = await getSubscriptions();
-    if (!subscriptions || subscriptions.length === 0) return; // No subscriptions to process
+    if (!subscriptions || subscriptions.length === 0) {
+      return console.log('No subscription to process'); // No subscriptions to process
+    }
 
-    const { data, error } = await supabase.from<ITransaction>('transactions').insert(
+    const { error } = await supabase.from('transactions').insert(
       subscriptions.map(
-        ({ category, paymentMethod, amount, created_by, description, receiver }) => ({
-          category,
-          paymentMethod,
-          amount,
-          created_by,
-          description,
-          receiver,
-          date: new Date(),
-        })
+        ({ category, paymentMethod, amount, created_by, description, receiver }) =>
+          ({
+            category,
+            paymentMethod,
+            amount,
+            created_by,
+            description,
+            receiver,
+            date: new Date(),
+          } as TBaseTransaction)
       )
     );
     if (error) throw error;
@@ -63,7 +69,10 @@ task.start();
 
 function authClient(email: string, password: string): Promise<User | null> {
   return new Promise(async (res, rej) => {
-    const { user, error } = await supabase.auth.signIn({
+    const {
+      data: { user },
+      error,
+    } = await supabase.auth.signInWithPassword({
       email: email,
       password: password,
     });
@@ -72,10 +81,10 @@ function authClient(email: string, password: string): Promise<User | null> {
   });
 }
 
-function getSubscriptions(): Promise<ISubscription[] | null> {
+function getSubscriptions(): Promise<TBaseSubscription[] | null> {
   return new Promise(async (res, rej) => {
     const { data, error } = await supabase
-      .from<ISubscription>('subscriptions')
+      .from('subscriptions')
       .select('*')
       .eq('paused', false)
       .eq('execute_at', new Date().getDate());

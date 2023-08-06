@@ -1,11 +1,19 @@
 import dotenv from 'dotenv';
 dotenv.config();
-import { createClient } from '@supabase/supabase-js';
+import { SupabaseClient, createClient } from '@supabase/supabase-js';
 
-const supabaseUrl = process.env.SUPABASE_URL;
-const supabaseAnonKey = process.env.SUPABASE_ANON_KEY;
+let supabaseInstance: SupabaseClient<any, 'public', any>;
 
-if (!supabaseUrl) throw new Error("Enviroment variable 'SUPABASE_URL' not found!");
-if (!supabaseAnonKey) throw new Error("Enviroment variable 'SUPABASE_ANON_KEY' not found!");
+export function getSupabaseInstance() {
+  if (!supabaseInstance) {
+    const { SUPABASE_ANON, SUPABASE_URL } = process.env;
+    if (!SUPABASE_URL) throw new Error("Enviroment variable 'SUPABASE_URL' not found!");
+    if (!SUPABASE_ANON) throw new Error("Enviroment variable 'SUPABASE_ANON_KEY' not found!");
+    const SupabaseUrl = SUPABASE_URL as string;
+    const SupabaseAnonKey = SUPABASE_ANON as string;
+    supabaseInstance = createClient(SupabaseUrl, SupabaseAnonKey);
+  }
+  return supabaseInstance;
+}
 
-export const supabase = createClient(supabaseUrl, supabaseAnonKey);
+export const supabase = getSupabaseInstance();
