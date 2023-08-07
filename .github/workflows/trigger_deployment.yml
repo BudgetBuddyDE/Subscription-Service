@@ -24,9 +24,9 @@ jobs:
           script: |
             echo ${{ secrets.PAT }} | docker login ghcr.io -u ${{ secrets.DOCKER_USER }} --password-stdin
             CONTAINER_NAME="subscription-service"
-            if [ "$(docker ps -q -f name=$CONTAINER_NAME)" ]; then
-              docker stop $CONTAINER_NAME
-              docker rm -f $CONTAINER_NAME
+            if [ "$(docker ps -a --filter "name=$CONTAINER_NAME" --format '{{.Names}}')" ]; then
+              docker container stop $CONTAINER_NAME
+              docker container rm -f $CONTAINER_NAME
             fi
             docker pull ${{ env.IMAGE_NAME }}:latest
             docker run -itd --env-file '${{ secrets.RS1_REMOTE_LOCATION }}/subscription-service.env' --restart on-failure:3 --name=$CONTAINER_NAME ${{ env.IMAGE_NAME }}:latest
