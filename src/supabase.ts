@@ -6,11 +6,11 @@ let supabaseInstance: SupabaseClient<any, 'public', any>;
 
 export function getSupabaseInstance() {
   if (!supabaseInstance) {
-    const { SUPABASE_ANON, SUPABASE_URL } = process.env;
+    const { SUPABASE_ANON_KEY, SUPABASE_URL } = process.env;
     if (!SUPABASE_URL) throw new Error("Enviroment variable 'SUPABASE_URL' not found!");
-    if (!SUPABASE_ANON) throw new Error("Enviroment variable 'SUPABASE_ANON_KEY' not found!");
+    if (!SUPABASE_ANON_KEY) throw new Error("Enviroment variable 'SUPABASE_ANON_KEY' not found!");
     const SupabaseUrl = SUPABASE_URL as string;
-    const SupabaseAnonKey = SUPABASE_ANON as string;
+    const SupabaseAnonKey = SUPABASE_ANON_KEY as string;
     supabaseInstance = createClient(SupabaseUrl, SupabaseAnonKey);
   }
   return supabaseInstance;

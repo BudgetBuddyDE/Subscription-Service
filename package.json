@@ -5,7 +5,7 @@
   "main": "dist/src/index.js",
   "scripts": {
     "test": "jest --passWithNoTests",
-    "build": "tsc",
+    "build": "rimraf dist && tsc",
     "start": "node dist/src/index.js",
     "dev": "ts-node src/index.ts"
   },
@@ -32,6 +32,7 @@
     "@supabase/supabase-js": "^2.31.0",
     "cron": "^2.4.0",
     "dotenv": "^16.3.1",
+    "rimraf": "^5.0.1",
     "ts-node": "^10.9.1"
   }
 }
