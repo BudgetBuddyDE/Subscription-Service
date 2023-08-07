@@ -1,0 +1,32 @@
+name: Deploy Docker Image
+
+on:
+  workflow_dispatch:
+  repository_dispatch:
+    types: [trigger_deployment]
+
+env:
+  IMAGE_NAME: ghcr.io/budgetbuddyde/subscription-service
+
+jobs:
+  renew_docker_compose:
+    name: Rebuild Remote Docker-Compose
+    runs-on: ubuntu-latest
+    environment: rs1_prod
+    steps:
+      - name: Connect and deploy
+        uses: appleboy/ssh-action@master
+        with:
+          host: ${{ secrets.RS1_HOST }}
+          username: ${{ secrets.RS1_USER }}
+          password: ${{ secrets.RS1_PASSWORD }}
+          port: 22
+          script: |
+            echo ${{ secrets.PAT }} | docker login ghcr.io -u ${{ secrets.DOCKER_USER }} --password-stdin
+            CONTAINER_NAME="subscription-service"
+            if [ "$(docker ps -q -f name=$CONTAINER_NAME)" ]; then
+              docker stop $CONTAINER_NAME
+              docker rm -f $CONTAINER_NAME
+            fi
+            docker pull ${{ env.IMAGE_NAME }}:latest
+            docker run -itd --env-file '${{ secrets.RS1_REMOTE_LOCATION }}/subscription-service.env' --restart on-failure:3 --name=$CONTAINER_NAME ${{ env.IMAGE_NAME }}:latest
