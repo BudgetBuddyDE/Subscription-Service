@@ -2,11 +2,11 @@
   "name": "subscription-service",
   "version": "1.0.5",
   "description": "",
-  "main": "dist/index.js",
+  "main": "dist/src/index.js",
   "scripts": {
     "test": "jest --passWithNoTests",
     "build": "tsc",
-    "start": "node dist/index.js",
+    "start": "node dist/src/index.js",
     "dev": "ts-node src/index.ts"
   },
   "repository": {
