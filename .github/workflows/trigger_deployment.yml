@@ -28,5 +28,8 @@ jobs:
               docker container stop $CONTAINER_NAME
               docker container rm -f $CONTAINER_NAME
             fi
+            if [ "$(docker images -q "${{ env.IMAGE_NAME }}:latest")" ]; then
+              docker rmi "${{ env.IMAGE_NAME }}:latest"
+            fi
             docker pull ${{ env.IMAGE_NAME }}:latest
             docker run -itd --env-file '${{ secrets.RS1_REMOTE_LOCATION }}/subscription-service.env' --restart on-failure:3 --name=$CONTAINER_NAME ${{ env.IMAGE_NAME }}:latest
