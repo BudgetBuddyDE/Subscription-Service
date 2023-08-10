@@ -31,7 +31,7 @@ import { User } from '@supabase/supabase-js';
 import { supabase } from './supabase';
 import type { TBaseSubscription, TBaseTransaction } from './types';
 
-const task = new CronJob('0 1 * * *', async () => {
+const task = new CronJob('0 3 * * *', async () => {
   try {
     const authUser = await authClient(process.env.SERVICE_EMAIL!, process.env.SERVICE_PASSWORD!);
     if (!authUser) {
