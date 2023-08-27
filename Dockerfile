@@ -6,9 +6,10 @@ WORKDIR /usr/src/subscription-service/
 
 COPY package*.json ./
 
-COPY . .
 
-RUN npm install
+RUN --mount=type=secret,id=npm,target=.npmrc npm install
+
+COPY . .
 
 RUN npm run build
 
