@@ -17,9 +17,7 @@ jobs:
             - uses: actions/checkout@v3
             - name: Build Image
               run: |
-                  rm .npmrc 
-                  echo $'@kleithor:registry=https://npm.pkg.github.com\n//npm.pkg.github.com/:_authToken='$NPM_TOKEN >> .npmrc
-                  docker build --secret id=npm,src=.npmrc . -t ${{ env.IMAGE_NAME }}:${{ github.ref_name }}
+                  docker build . -t ${{ env.IMAGE_NAME }}:${{ github.ref_name }}
                   docker build . -t ${{ env.IMAGE_NAME }}:${{ github.ref_name }}
                   mkdir -p artifacts
                   docker save ${{ env.IMAGE_NAME }}:${{ github.ref_name }} > artifacts/docker-image.tar
