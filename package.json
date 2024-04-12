@@ -2,11 +2,11 @@
   "name": "subscription-service",
   "version": "2.0.1",
   "description": "",
-  "main": "dist/src/index.js",
+  "main": "build/src/index.js",
   "scripts": {
     "test": "jest --passWithNoTests",
     "build": "rimraf dist && tsc",
-    "start": "node dist/src/index.js",
+    "start": "node build/src/index.js",
     "dev": "ts-node src/index.ts",
     "format": "npx prettier --write . --log-level silent",
     "prepare": "husky"
