@@ -1,5 +1,8 @@
 # Subscription-Service
 
+> [!IMPORTANT]
+> This “service” is no longer required, as subscriptions (recurring payments) are now processed directly via the Pocketbase instance. Implemented in the commit [6dec29e779a4321be07d3d4dc1db96dccefe34bb](https://github.com/BudgetBuddyDE/Pocketbase/commit/6dec29e779a4321be07d3d4dc1db96dccefe34bb)
+
 ## ToC
 
 - [Subscription-Service](#subscription-service)
